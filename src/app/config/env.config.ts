@@ -5,6 +5,7 @@ config()
 const envSchema = z.object({
     PORT : z.string().default('2000'),
      DATABASE_URL: z.string({ message: "DATABASE_URL must be a valid URL" }),
+     NODE_ENV:z.string()
 
 })
 
