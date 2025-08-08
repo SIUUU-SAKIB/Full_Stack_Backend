@@ -2,12 +2,14 @@ import { envVariable } from "./app/config/env.config"
 import mongoose from "mongoose"
 import app from "./app"
 import http from "http"
+import { seedSuperAdmin } from "./app/utils/seedSuperAdmin"
 const server = http.createServer(app)
 // MONGODB DATABASE
 const startMongoose = async () => {
     try {
         await mongoose.connect(`${envVariable.DATABASE_URL}`)
         console.log("MONGODB CONNECTED SUCCESSFULLY 😍")
+        await seedSuperAdmin()
         server.listen(envVariable.PORT, () => { console.log(`SERVER IS RUNNING AT http://localhost:${envVariable.PORT}`) })
     } catch (error) {
         console.log(error)
@@ -31,7 +33,7 @@ const racefullyShutown = async () => {
             process.exit(1)
         }
     })
-    
+
     try {
         await mongoose.connection.close()
         console.log(`MongoDB connection closed`)
