@@ -1,14 +1,14 @@
 import { Schema, model } from "mongoose"
 import { IUser, Role } from "./user.interface"
 
-const userSchema = new Schema<IUser>(
+const adminSchema = new Schema<IUser>(
     {
         name: { type: String, required: true, trim: true },
 
         email: { type: String, required: true, unique: true, trim: true },
 
         password: { type: String, trim: true },
-       accessToken:{type:String},
+        accessToken: { type: String },
         role: {
             type: String,
             enum: Object.values(Role),
@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser>(
             postalCode: { type: Number },
             country: { type: String },
         },
-        
+
         auths: [
             {
                 provider: {
@@ -39,11 +39,11 @@ const userSchema = new Schema<IUser>(
                 providerId: { type: String, required: true },
             }
         ],
-        parcelId:{
-            type:Schema.Types.ObjectId, ref:'parcel'
+        parcelId: {
+            type: Schema.Types.ObjectId, ref: 'parcel'
         }
     },
-    { timestamps: true, versionKey:false }
+    { timestamps: true, versionKey: false }
 )
 
-export const UserModel = model<IUser>("User", userSchema)
+export const adminModel = model<IUser>("all-admin", adminSchema)

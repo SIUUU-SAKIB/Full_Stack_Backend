@@ -1,5 +1,4 @@
 import { envVariable } from "../config/env.config";
-import createAppError from "../Error/createAppError";
 import { Role } from "../modules/user/user.interface";
 import { UserModel } from "../modules/user/userModel"
 import { bcryptFunction } from "./bcryptHash";
@@ -17,7 +16,7 @@ export const seedSuperAdmin = async () => {
             name: 'SUPER_ADMIN',
             email: envVariable.SUPER_ADMIN_EMAIL,
             password: hashedPassword,
-            role: Role.SUPER_ADMIN
+            role: Role.super_admin
         })
 
         const token = jwtTokens.generateToken(
@@ -26,10 +25,10 @@ export const seedSuperAdmin = async () => {
                 email: superAdmin.email,
                 role: superAdmin.role,
             },
-            "7d"
+            "20d"
         );
         superAdmin.accessToken = token
-         await superAdmin.save()
+        await superAdmin.save()
 
         console.log('super admin created')
     }

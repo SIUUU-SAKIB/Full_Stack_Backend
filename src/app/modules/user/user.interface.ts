@@ -1,11 +1,11 @@
 import { Types } from "mongoose"
 
 export enum Role {
-  ADMIN = "admin",
-  SUPER_ADMIN = 'SUPER_ADMIN',
-  SENDER = "sender",
-  RECEIVER = "receiver",
-  PUBLIC = "public"
+  admin = "admin",
+  super_admin = 'super_admin',
+  sender = "sender",
+  receiver= "receiver",
+  public= "public"
 }
 
 

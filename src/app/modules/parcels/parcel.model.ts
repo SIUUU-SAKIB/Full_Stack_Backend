@@ -1,0 +1,60 @@
+import mongoose, { Schema } from "mongoose";
+import { IAddress, IParcel, ParcelStatus } from "./parcel.interface";
+
+const AddressSchema = new Schema<IAddress>(
+    {
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        email: { type: String },
+        streetAddress: { type: String },
+        city: { type: String, required: true },
+        state: { type: String },
+        postalCode: { type: String, required: true },
+        country: { type: String, required: true },
+        landmark: { type: String },
+    },
+    { _id: false }
+);
+
+const DimensionsSchema = new Schema(
+    {
+        length: { type: Number, required: true },
+        width: { type: Number, required: true },
+        height: { type: Number, required: true },
+    }
+);
+
+const ParcelSchema = new Schema<IParcel>({
+    sender: { type: AddressSchema, required: true },
+    receiver: { type: AddressSchema, required: true },
+    accessToken:{type:String},
+    weight: { type: Number, required: true },
+    dimentions: { type: DimensionsSchema },
+    contentDescription: { type: String },
+    fragile: { type: Boolean },
+    trackingNumber: { type: String, unique: true, sparse: true },
+    currentStatus: {
+        type: String,
+        enum: Object.values(ParcelStatus),
+        required: true,
+        default: ParcelStatus.PENDING,
+    },
+    pickupDate: { type: Date },
+    expectedDeliveryDate: { type: Date },
+    actualDeliveryDate: { type: Date },
+    deliveryAttempts: { type: Number, default: 0 },
+    shippingCost: { type: Number },
+    paymentStatus: {
+        type: String,
+        enum: ["unpaid", "paid", "refunded"],
+        default: "unpaid",
+    },
+    paymentMethod: {
+        type: String,
+        enum: ["cash_on_delivery", "credit_card", "mobile_payment"],
+    },
+},{
+    timestamps:true, versionKey:false
+});
+
+export const ParcelModel = mongoose.model<IParcel>("Parcel", ParcelSchema);

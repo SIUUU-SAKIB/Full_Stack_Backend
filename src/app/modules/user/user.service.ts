@@ -59,11 +59,13 @@ const deleteUser = async (id: string) => {
 }
 
 const updateUser = async (id: string, payload: Partial<IUser>) => {
-    const findUser = await UserModel.findById({ _id: id })
+    const findUser = await UserModel.findById(id)
     if (!findUser) {
         throw new createAppError(404, 'User does not exist')
     }
-
+    if (payload.password) {
+        payload.password = await bcryptFunction.hashedPassword(payload.password)
+    }
     const user = await UserModel.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
     return user
 }

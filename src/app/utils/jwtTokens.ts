@@ -1,6 +1,6 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken"
 import { envVariable } from "../config/env.config"
-import createAppError from "../Error/createAppError"
+
 
 
 const generateToken = (payload: JwtPayload, expiresIn: string = '1d'): string => {
@@ -24,5 +24,5 @@ const verifyToken = (payload: string) => {
     }
 }
 export const jwtTokens = {
-    generateToken, verifyToken,generateRefreshToken
+    generateToken, verifyToken, generateRefreshToken
 }
