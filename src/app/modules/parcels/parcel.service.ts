@@ -2,7 +2,7 @@ import createAppError from "../../Error/createAppError";
 import { generateTackingID } from "../../utils/generateTrackingId";
 import { jwtTokens } from "../../utils/jwtTokens";
 import { UserModel } from "../user/userModel";
-import { IParcel } from "./parcel.interface";
+import { IParcel, ParcelStatus } from "./parcel.interface";
 import httpStatus from "http-status-codes";
 import { ParcelModel } from "./parcel.model";
 import { JwtPayload } from "jsonwebtoken";
@@ -23,9 +23,10 @@ const createParcel = async (payload: Partial<IParcel>, user: any) => {
     if (isParcelExist) {
         throw new createAppError(httpStatus.CONFLICT, 'This parcel Already exist')
     }
+    console.log(user)
     const sender = {
-        name: user.userName,
-        email: user.userEmail,
+        name: rest.sender?.name || undefined,
+        email: user?.email,
         phone: rest.sender?.phone || undefined,
         streetAddress: rest.sender?.streetAddress || undefined,
         city: rest.sender?.city || undefined,
@@ -47,11 +48,12 @@ const createParcel = async (payload: Partial<IParcel>, user: any) => {
     return { parcel };
 };
 
-// *UPDAATE PARCEL : ONLY ADMIN || SUPER_ADMIN
+// *UPDATE PARCEL : ONLY ADMIN || SUPER_ADMIN
 
 const updateParcel = async (payload: Partial<IParcel>, id: any) => {
 
     const parcel = await ParcelModel.findByIdAndUpdate(id, payload)
+    await parcel?.save()
     return parcel
 }
 
@@ -86,6 +88,21 @@ export const parcelStatus = async (trackingNumber: string) => {
     console.log(parcel)
     return parcel.currentStatus;
 };
+
+// *CHANGE STATUS BY USER ONLY
+const cancelParcel = async (payload: Partial<IParcel>) => {
+    const { trackingNumber } = payload;
+    const { currentStatus } = payload;
+    const isParcelExist = await ParcelModel.findOne({ trackingNumber })
+    if (!isParcelExist) throw new createAppError(httpStatus.NOT_FOUND, 'Parcel does not exist😔')
+    if (isParcelExist.currentStatus === ParcelStatus.PENDING) {
+        isParcelExist.currentStatus = currentStatus as ParcelStatus
+        await isParcelExist.save()
+    } else {
+        throw new createAppError(httpStatus.BAD_REQUEST, `You cannot cancel this parcel because its been already is ${isParcelExist.currentStatus} status`)
+    }
+    return isParcelExist
+}
 export const parcelService = {
-    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus
+    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus, cancelParcel
 }

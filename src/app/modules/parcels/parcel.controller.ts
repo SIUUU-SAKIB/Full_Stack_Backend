@@ -79,7 +79,7 @@ const parcelStatus = async (
     res: Response,
     next: NextFunction) => {
     try {
-      const {trackingNumber} = req.body
+        const { trackingNumber } = req.body
         const result = await parcelService.parcelStatus(trackingNumber)
         sendResponse(res, {
             success: true,
@@ -91,8 +91,25 @@ const parcelStatus = async (
     } catch (error: any) {
         next(error)
     }
+}
+
+// cancel parcel
+const cancelParcel = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await parcelService.cancelParcel(req.body)
+
+        sendResponse(res, {
+            success: true,
+            statusCode: httpStatus.ACCEPTED,
+            message: `You have successfully cancelled this parcel delivery`,
+            data: result
+
+        })
+    } catch (error: any) {
+        next(error)
+    }
 
 }
 export const parcelController = {
-    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus
+    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus, cancelParcel
 }

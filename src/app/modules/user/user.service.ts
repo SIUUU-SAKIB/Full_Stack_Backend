@@ -22,12 +22,13 @@ const createUser = async (payload: Partial<IUser>) => {
 
 
     const user = await UserModel.create({
-        email, password: hashedPassword, auths: [authProvider], ...rest
+       name, email, password: hashedPassword, auths: [authProvider], ...rest
     })
     // JWT TOKEN
     const jwtPayload = {
         user_id: user._id,
         email: user.email,
+        name:rest.name,
         role: user.role
     }
 

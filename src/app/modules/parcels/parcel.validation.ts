@@ -22,7 +22,7 @@ export const PaymentMethodEnum = z.enum([
 const AddressSchema = z.object({
   name: z.string(),
   phone: z.string().optional(),
-  email: z.email(),
+  email: z.email().optional(),
   streetAddress: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -46,7 +46,7 @@ export const ParcelZodSchema = z.object({
   contentDescription: z.string().optional(),
   fragile: z.boolean().optional(),
   trackingNumber: z.string().optional(),
-  currentStatus: ParcelStatusEnum.optional(),
+  currentStatus: ParcelStatusEnum.default("pending").optional(),
   pickupDate: z.preprocess(
     (arg) => (arg ? new Date(arg as string) : undefined),
     z.date().optional()
@@ -62,7 +62,7 @@ export const ParcelZodSchema = z.object({
   deliveryAttempts: z.number().int().optional(),
   shippingCost: z.number().optional(),
   paymentStatus: PaymentStatusEnum.optional(),
-  paymentMethod: PaymentMethodEnum.optional(),
+  paymentMethod: PaymentMethodEnum.optional()
 });
 
 
@@ -72,4 +72,5 @@ export const updateParcelZodSchema = z.object({
   shippingCost: z.number().optional(),
   paymentStatus: PaymentStatusEnum.optional(),
   paymentMethod: PaymentMethodEnum.optional(), fragile: z.boolean().optional(),
+
 })

@@ -8,7 +8,6 @@ export enum ParcelStatus {
     RETURNED = "returned",
     CANCELLED = "cancelled",
     APPROVED = "approved"
-
 }
 
 export type PaymentStatus = "unpaid" | "paid" | "refunded";
@@ -29,7 +28,7 @@ export interface IAddress {
 export interface IParcel {
     sender: IAddress,
     receiver: IAddress,
-    accessToken?:string,
+    accessToken?: string,
     weight: number,
     dimentions?: { length: number; width: number; height: number },
     contentDescription?: string,

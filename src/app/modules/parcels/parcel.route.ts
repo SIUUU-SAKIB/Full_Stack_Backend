@@ -14,12 +14,15 @@ parcelRouter.get('/all-parcel', authMiddleware('admin', 'super_admin'), parcelCo
 // *update parcel
 parcelRouter.patch('/parcel-status/:id', authMiddleware('admin', 'super_admin'), vaildateZodSchema(updateParcelZodSchema), parcelController.updateParcel)
 
-// !delete parcel
+// *delete parcel
 parcelRouter.delete('/delete/:id', authMiddleware('admin', 'super_admin'), parcelController.deleteParcel)
 
-// !user delete parcel 
+// *user delete parcel 
 
 parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender'), parcelController.deleteParcel) 
 
-// *parcel status
+// *get parcel status
 parcelRouter.get('/current-status', authMiddleware('sender', 'receiver'), parcelController.parcelStatus)
+
+// *cancel parcel
+parcelRouter.patch('/cancel-parcel', authMiddleware("sender", "receiver"), parcelController.cancelParcel)
