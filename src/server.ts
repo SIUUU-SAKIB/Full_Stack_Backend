@@ -5,12 +5,13 @@ import http from "http"
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin"
 const server = http.createServer(app)
 // MONGODB DATABASE
+const PORT = process.env.PORT || envVariable.PORT || 4000
 const startMongoose = async () => {
     try {
         await mongoose.connect(`${envVariable.DATABASE_URL}`)
         console.log("MONGODB CONNECTED SUCCESSFULLY 😍")
         await seedSuperAdmin()
-        server.listen(envVariable.PORT, () => { console.log(`SERVER IS RUNNING AT http://localhost:${envVariable.PORT}`) })
+        server.listen(PORT, () => { console.log(`SERVER IS RUNNING AT http://localhost:${PORT}`) })
     } catch (error) {
         console.log(error)
         process.exit(1)
