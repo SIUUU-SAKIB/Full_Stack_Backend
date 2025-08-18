@@ -9,56 +9,54 @@ import { UserModel } from "./userModel";
 import httpStatus from "http-status-codes"
 
 const createUser = async (payload: Partial<IUser>) => {
-    const { name, email, password, ...rest } = payload
+    const { name, email, password, ...rest } = payload;
 
+    
     if (!email || !password) {
         throw new createAppError(httpStatus.BAD_REQUEST, "Email and password are required");
     }
 
-    const isUserExist = await UserModel.findOne({ email })
+    const isUserExist = await UserModel.findOne({ email });
     if (isUserExist) {
-        throw new createAppError(httpStatus.BAD_GATEWAY, 'User already exist')
+        throw new createAppError(httpStatus.BAD_GATEWAY, 'User already exist');
     }
 
-    if (rest.role === 'admin') {
-        throw new createAppError(httpStatus.BAD_GATEWAY, 'you cannot assing as an Admin or Super_Admin')
-    } else if (rest.role === 'super_admin') {
-
-        throw new createAppError(httpStatus.BAD_GATEWAY, 'you cannot assing as an Admin or Super_Admin')
+    if (rest.role === 'admin' || rest.role === 'super_admin') {
+        throw new createAppError(httpStatus.BAD_GATEWAY, 'You cannot assign as an Admin or Super_Admin');
     }
 
-    // BCRYPT HASHED PASSWORD
-    const hashedPassword = await bcryptFunction.hashedPassword(password)
-    const authProvider: IAuthProvider = { provider: 'credentials', providerId: email }
 
+    const hashedPassword = await bcryptFunction.hashedPassword(password);
+    const authProvider: IAuthProvider = { provider: 'credentials', providerId: email };
 
+    // Create user
     const user = await UserModel.create({
-        name,
+        name: name || '',
         email,
         password: hashedPassword,
         auths: [authProvider],
         ...rest
     });
-    let isVerified
-    // JWT TOKEN
+
+    // Prepare JWT payload
     const jwtPayload = {
         user_id: user._id,
         email: user.email,
-        name: name,
+        name: user.name, 
         role: user.role,
-        verified: isVerified,
-    }
+        verified: user.isVerified, 
+    };
 
-    const token = jwtTokens.generateToken(jwtPayload, '2d')
-    user.accessToken = token
+    // Generate token
+    const token = jwtTokens.generateToken(jwtPayload, '2d');
+    user.accessToken = token;
 
-    await user.save()
-    isVerified = user.isVerified
+    await user.save();
+    
     return {
         user
-    }
-
-}
+    };
+};
 // CREATE ADMIN: ONLY SUPER ADMIN
 const createAdmin = async (payload: Partial<IUser>) => {
     const { email, password, ...rest } = payload
