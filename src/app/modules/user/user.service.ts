@@ -11,7 +11,6 @@ import httpStatus from "http-status-codes"
 const createUser = async (payload: Partial<IUser>) => {
     const { name, email, password, ...rest } = payload;
 
-    
     if (!email || !password) {
         throw new createAppError(httpStatus.BAD_REQUEST, "Email and password are required");
     }
@@ -42,9 +41,9 @@ const createUser = async (payload: Partial<IUser>) => {
     const jwtPayload = {
         user_id: user._id,
         email: user.email,
-        name: user.name, 
+        name: user.name,
         role: user.role,
-        verified: user.isVerified, 
+        verified: user.isVerified,
     };
 
     // Generate token
@@ -52,7 +51,7 @@ const createUser = async (payload: Partial<IUser>) => {
     user.accessToken = token;
 
     await user.save();
-    
+
     return {
         user
     };
@@ -161,7 +160,7 @@ const updateUser = async (id: string, payload: Partial<IUser>, currentUser: JwtP
 }
 
 // *UPDATE UESR BY ADMIN
-const updateUserbyAdmin = async (id: string, payload: Partial<IUser>)=> {
+const updateUserbyAdmin = async (id: string, payload: Partial<IUser>) => {
 
     const findUser = await UserModel.findById(id)
     if (!findUser) {
