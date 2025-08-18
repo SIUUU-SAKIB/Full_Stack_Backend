@@ -1,17 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 import { IAddress, IParcel, ParcelStatus } from "./parcel.interface";
+import { string } from "zod/v4/core/regexes.cjs";
 
 const AddressSchema = new Schema<IAddress>(
     {
         name: { type: String, required: true },
         phone: { type: String, required: true },
         email: { type: String },
-        streetAddress: { type: String },
-        city: { type: String, required: true },
-        state: { type: String },
-        postalCode: { type: String, required: true },
-        country: { type: String, required: true },
-        landmark: { type: String },
+        address: { type: String }
     },
     { _id: false }
 );
@@ -27,7 +23,7 @@ const DimensionsSchema = new Schema(
 const ParcelSchema = new Schema<IParcel>({
     sender: { type: AddressSchema, required: true },
     receiver: { type: AddressSchema, required: true },
-    accessToken:{type:String},
+    accessToken: { type: String },
     weight: { type: Number, required: true },
     dimentions: { type: DimensionsSchema },
     contentDescription: { type: String },
@@ -53,8 +49,8 @@ const ParcelSchema = new Schema<IParcel>({
         type: String,
         enum: ["cash_on_delivery", "credit_card", "mobile_payment"],
     },
-},{
-    timestamps:true, versionKey:false
+}, {
+    timestamps: true, versionKey: false
 });
 
 export const ParcelModel = mongoose.model<IParcel>("Parcel", ParcelSchema);

@@ -16,13 +16,8 @@ export type PaymentMethod = "cash_on_delivery" | "credit_card" | "mobile_payment
 export interface IAddress {
     name: string;
     phone: string;
-    email?: string;
-    streetAddress: string;
-    city: string;
-    state?: string;
-    postalCode: string;
-    country: string;
-    landmark?: string;
+    email: string;
+    address: string
 }
 
 export interface IParcel {

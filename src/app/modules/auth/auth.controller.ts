@@ -6,11 +6,9 @@ import { setAuthCookies } from "../../utils/storeCookie";
 
 
 const credentialsLogin = async (req: Request, res: Response, next: NextFunction) => {
-
     try {
         const payload = req.body;
-        console.log(payload)
-        const user = await authService.credentialsLogin(payload)
+        const user = await authService.credentialsLogin(payload, res)
 
         setAuthCookies(res, user.accessToken, user.refreshToken)
         sendResponse(res, {

@@ -5,8 +5,8 @@ import { ParcelZodSchema, updateParcelZodSchema } from "./parcel.validation";
 import { authMiddleware } from "../../middlewares/authMiddleware";
 
 export const parcelRouter = Router()
-// ?create parcel
-parcelRouter.post('/create-parcel', vaildateZodSchema(ParcelZodSchema), authMiddleware('sender'), parcelController.createParcel)
+// *create parcel
+parcelRouter.post('/create-parcel', vaildateZodSchema(ParcelZodSchema), authMiddleware('sender', 'admin', 'super_admin'), parcelController.createParcel)
 
 // *get all parcels
 parcelRouter.get('/all-parcel', authMiddleware('admin', 'super_admin'), parcelController.getAllParcels)
@@ -19,7 +19,7 @@ parcelRouter.delete('/delete/:id', authMiddleware('admin', 'super_admin'), parce
 
 // *user delete parcel 
 
-parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender'), parcelController.deleteParcel) 
+// parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender'), parcelController.deleteParcel) 
 
 // *get parcel status
 parcelRouter.get('/current-status', authMiddleware('sender', 'receiver'), parcelController.parcelStatus)

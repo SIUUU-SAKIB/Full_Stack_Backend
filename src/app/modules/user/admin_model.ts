@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose"
 import { IUser, Role } from "./user.interface"
 
-const userSchema = new Schema<IUser>(
+const adminSchema = new Schema<IUser>(
     {
         name: { type: String, required: true, trim: true },
 
@@ -13,7 +13,8 @@ const userSchema = new Schema<IUser>(
             type: String,
             enum: Object.values(Role),
             default: Role.public,
-            required: true
+            required: true,
+            
         },
 
         phone: { type: Number, trim: true },
@@ -46,5 +47,4 @@ const userSchema = new Schema<IUser>(
     { timestamps: true, versionKey:false }
 )
 
-export const UserModel = model<IUser>("User", userSchema)
-
+export const AdminModel = model<IUser>("admins", adminSchema)

@@ -15,7 +15,7 @@ const createUserZodSchema = z.object({
         message: "Phone number must be a valid Bangladeshi number..."
     }).optional()
     ,
-    role: z.enum(Object.values(Role) as [string]).optional(),
+    role: z.enum(Object.values(Role) as [string]),
     address: z.object({
         street: z.string().min(5, { message: 'Street name cannot be smaller than 5 characters' }).max(50, { message: 'Street name cannot exceed 50 characters.' }).optional(),
         city: z.string().min(3, { message: 'City name cannot be smaller than 3 characters' }).max(30, { message: 'Street name cannot exceed 30 characters.' }).optional(),
@@ -28,8 +28,8 @@ const createUserZodSchema = z.object({
 
 })
 const updateUserZodSchema = z.object({
-    name: z.string({ message: 'Name must be a string' }).min(2, { message: 'Name cannot be smaller than two characters' }).max(30, { message: 'Name cannot exceed thirty characters.' }),
-    password: z.string({ message: "Password is required" }),
+    name: z.string({ message: 'Name must be a string' }).min(2, { message: 'Name cannot be smaller than two characters' }).max(30, { message: 'Name cannot exceed thirty characters.' }).optional(),
+    password: z.string({ message: "Password is required" }).optional(),
     role: z.enum(Object.values(Role) as [string]).optional(),
     phone: z.string().regex(/^(?:\+88|88)?01[3-9]\d{8}$/, {
         message: "Phone number must be a valid Bangladeshi number..."

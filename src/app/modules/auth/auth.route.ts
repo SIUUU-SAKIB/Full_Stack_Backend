@@ -9,7 +9,7 @@ export const authRoutes = Router()
 authRoutes.post('/login', AuthController.credentialsLogin)
 
 // *RESET PASSWORD
-authRoutes.post('/reset-password',authMiddleware(...Object.values(Role)), AuthController.resetPassword)
+authRoutes.patch('/reset-password',authMiddleware(...Object.values(Role)), AuthController.resetPassword)
 
 // *LOGOUT
-authRoutes.post('/logout', AuthController.logout)
+authRoutes.post('/logout', authMiddleware(...Object.values(Role)), AuthController.logout)

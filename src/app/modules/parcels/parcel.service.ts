@@ -6,13 +6,17 @@ import { IParcel, ParcelStatus } from "./parcel.interface";
 import httpStatus from "http-status-codes";
 import { ParcelModel } from "./parcel.model";
 import { JwtPayload } from "jsonwebtoken";
+import { Request } from "express";
 
 
 // *CREAE A PARCEL REQUEST : ONLY SENDER
 
-const createParcel = async (payload: Partial<IParcel>, user: any) => {
+const createParcel = async (payload: Partial<IParcel>, email: string) => {
     const { receiver, trackingNumber, ...rest } = payload;
-
+    const findUser = await UserModel.findOne({ email })
+    if (findUser?.isVerified === false) {
+        throw new createAppError(httpStatus.BAD_REQUEST, 'User must be verified by the admin')
+    }
     if (!receiver) {
         throw new createAppError(
             httpStatus.BAD_REQUEST,
@@ -23,17 +27,11 @@ const createParcel = async (payload: Partial<IParcel>, user: any) => {
     if (isParcelExist) {
         throw new createAppError(httpStatus.CONFLICT, 'This parcel Already exist')
     }
-    console.log(user)
     const sender = {
         name: rest.sender?.name || undefined,
-        email: user?.email,
+        email: rest.sender?.email || undefined,
         phone: rest.sender?.phone || undefined,
-        streetAddress: rest.sender?.streetAddress || undefined,
-        city: rest.sender?.city || undefined,
-        state: rest.sender?.state || undefined,
-        postalCode: rest.sender?.postalCode || undefined,
-        country: rest.sender?.country || undefined,
-        landmark: rest.sender?.landmark || undefined
+        address: rest.sender?.address || undefined
     };
 
     const trackingID = generateTackingID();
@@ -41,6 +39,7 @@ const createParcel = async (payload: Partial<IParcel>, user: any) => {
     const parcel = await ParcelModel.create({
         sender,
         receiver,
+
         trackingNumber: trackingID,
         ...rest
     });
@@ -65,6 +64,16 @@ const getAllParcels = async () => {
         parcels, totalParcel
     }
 }
+
+// *VERIFY USER ONLY ADMIN
+const verifyUser = async (id: string) => {
+    const findUser = await UserModel.findOne({ id })
+    if (!findUser) { throw new createAppError(httpStatus.BAD_REQUEST, 'User does not exist') }
+    if (findUser) {
+        findUser.isVerified = true
+        await findUser.save()
+    }
+}
 // *DELETE PARCEL : ONLY ADMIN 
 const deleteParcel = async (id: string) => {
     await ParcelModel.findByIdAndDelete(id)
@@ -85,22 +94,32 @@ export const parcelStatus = async (trackingNumber: string) => {
     if (!parcel) {
         throw new createAppError(httpStatus.NOT_FOUND, "Parcel not found");
     }
-    console.log(parcel)
-    return parcel.currentStatus;
+    const status = {
+        status: parcel?.currentStatus || undefined,
+        deliveryAttempts: parcel?.deliveryAttempts || undefined,
+        paymentStatus: parcel?.paymentStatus || undefined,
+        expectedDeliveryDate: parcel?.expectedDeliveryDate || undefined,
+        shippingCost: parcel?.shippingCost || undefined
+    }
+    return status
 };
 
+
 // *CHANGE STATUS BY USER ONLY
-const cancelParcel = async (payload: Partial<IParcel>) => {
-    const { trackingNumber } = payload;
-    const { currentStatus } = payload;
+const cancelParcel = async (trackingNumber: string) => {
+
     const isParcelExist = await ParcelModel.findOne({ trackingNumber })
+
     if (!isParcelExist) throw new createAppError(httpStatus.NOT_FOUND, 'Parcel does not exist😔')
-    if (isParcelExist.currentStatus === ParcelStatus.PENDING) {
-        isParcelExist.currentStatus = currentStatus as ParcelStatus
-        await isParcelExist.save()
-    } else {
-        throw new createAppError(httpStatus.BAD_REQUEST, `You cannot cancel this parcel because its been already is ${isParcelExist.currentStatus} status`)
+
+    if (isParcelExist?.currentStatus !== "pending") {
+        throw new createAppError(httpStatus.EXPECTATION_FAILED, `you cannot cancel this parcel because it's been already in ${isParcelExist.currentStatus}`)
     }
+    isParcelExist.currentStatus = ParcelStatus.CANCELLED
+    await isParcelExist.save()
+
+
+
     return isParcelExist
 }
 export const parcelService = {

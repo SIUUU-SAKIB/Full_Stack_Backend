@@ -18,59 +18,42 @@ export const PaymentMethodEnum = z.enum([
   "credit_card",
   "mobile_payment",
 ]);
-
-const AddressSchema = z.object({
-  name: z.string(),
-  phone: z.string().optional(),
-  email: z.email().optional(),
-  streetAddress: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  postalCode: z.string().optional(),
-  country: z.string().optional(),
-  landmark: z.string().optional(),
-});
-
 const DimensionsSchema = z.object({
   length: z.number().optional(),
   width: z.number().optional(),
   height: z.number().optional(),
 });
+const AddressSchema = z.object({
+  name: z.string({ message: "Name required" }),
+  phone: z.string({ message: "Phone number required" }),
+  email: z.email({ message: "email required" }),
+  address: z.string({ message: "Address required" })
+});
+
+
 
 export const ParcelZodSchema = z.object({
   sender: AddressSchema,
   receiver: AddressSchema,
   accessToken: z.string().optional(),
-  weight: z.number().optional(),
+  weight: z.coerce.number(), 
   dimensions: DimensionsSchema.optional(),
-  contentDescription: z.string().optional(),
-  fragile: z.boolean().optional(),
+  contentDescription: z.string(),
+  fragile: z.boolean(),
   trackingNumber: z.string().optional(),
-  currentStatus: ParcelStatusEnum.default("pending").optional(),
-  pickupDate: z.preprocess(
-    (arg) => (arg ? new Date(arg as string) : undefined),
-    z.date().optional()
-  ),
-  expectedDeliveryDate: z.preprocess(
-    (arg) => (arg ? new Date(arg as string) : undefined),
-    z.date().optional()
-  ),
-  actualDeliveryDate: z.preprocess(
-    (arg) => (arg ? new Date(arg as string) : undefined),
-    z.date().optional()
-  ),
-  deliveryAttempts: z.number().int().optional(),
-  shippingCost: z.number().optional(),
-  paymentStatus: PaymentStatusEnum.optional(),
-  paymentMethod: PaymentMethodEnum.optional()
+  currentStatus: ParcelStatusEnum.default("pending"),
+  paymentMethod: PaymentMethodEnum.optional(),
+  expectedDeliveryDate: z.coerce.date().optional(),
 });
+
 
 
 export const updateParcelZodSchema = z.object({
   currentStatus: ParcelStatusEnum,
-  trackingNumber: z.string().optional(), deliveryAttempts: z.number().int().optional(),
+  deliveryAttempts: z.number().int().optional(),
   shippingCost: z.number().optional(),
   paymentStatus: PaymentStatusEnum.optional(),
-  paymentMethod: PaymentMethodEnum.optional(), fragile: z.boolean().optional(),
+  fragile: z.boolean().optional(),
+  expectedDeliveryDate: z.coerce.date().optional(),
 
 })

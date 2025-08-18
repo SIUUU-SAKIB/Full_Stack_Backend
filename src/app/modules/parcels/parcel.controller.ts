@@ -3,8 +3,10 @@ import { parcelService } from "./parcel.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from 'http-status-codes'
 const createParcel = async (req: Request, res: Response, next: NextFunction) => {
+    
     try {
-        const result = await parcelService.createParcel(req.body, req.user)
+        const {email} = req.user
+        const result = await parcelService.createParcel(req.body, email)
 
         sendResponse(res, {
             success: true,
@@ -65,12 +67,10 @@ const deleteParcel = async (
             statusCode: httpStatus.ACCEPTED,
             message: "Parcel deleted successfully 😍😍😍",
             data: null
-
         })
     } catch (error: any) {
         next(error)
     }
-
 }
 
 // parcel status
@@ -84,7 +84,7 @@ const parcelStatus = async (
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.ACCEPTED,
-            message: `parcel status is ${result?.toUpperCase()}`,
+            message: `Current parcel status is here 😍`,
             data: result
 
         })
@@ -96,7 +96,8 @@ const parcelStatus = async (
 // cancel parcel
 const cancelParcel = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await parcelService.cancelParcel(req.body)
+        const { trackingNumber } = req.body
+        const result = await parcelService.cancelParcel(trackingNumber)
 
         sendResponse(res, {
             success: true,

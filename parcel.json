@@ -1,192 +1,223 @@
+
 [
   {
-    "sender": {
-      "name": "Alice Johnson",
-      "phone": "01711111111",
-      "email": "alice@example.com",
-      "streetAddress": "123 Main Street",
-      "city": "Dhaka",
-      "state": "Dhaka",
-      "postalCode": "1207",
-      "country": "Bangladesh",
-      "landmark": "Near City Mall"
-    },
-    "receiver": {
-      "name": "Bob Smith",
-      "phone": "01822222222",
-      "email": "bob@example.com",
-      "streetAddress": "45 Lake Road",
-      "city": "Chittagong",
-      "state": "Chattogram",
-      "postalCode": "4000",
-      "country": "Bangladesh",
-      "landmark": "Opposite Central Park"
-    },
-    "approved": true,
-    "weight": 2.5,
-    "dimensions": { "length": 30, "width": 20, "height": 15 },
-    "contentDescription": "Books and documents",
-    "fragile": false,
-    "trackingNumber": "TRK001",
-    "currentStatus": "pending",
-    "pickupDate": "2025-08-01T10:00:00.000Z",
-    "expectedDeliveryDate": "2025-08-05T18:00:00.000Z",
-    "actualDeliveryDate": null,
-    "deliveryAttempts": 0,
+    "currentStatus": "picked_up",
+    "trackingNumber": "TRK10001",
+    "expectedDeliveryDate": "2025-08-20"
+  },
+  {
+    "currentStatus": "in_transit",
+    "trackingNumber": "TRK10002",
+    "deliveryAttempts": 1,
     "shippingCost": 250,
     "paymentStatus": "unpaid",
     "paymentMethod": "cash_on_delivery"
   },
   {
-    "sender": {
-      "name": "Rahim Uddin",
-      "phone": "01733333333",
-      "email": "rahim@example.com",
-      "streetAddress": "99 Old Town Road",
-      "city": "Khulna",
-      "state": "Khulna",
-      "postalCode": "9000",
-      "country": "Bangladesh",
-      "landmark": "Next to Grand Mosque"
-    },
-    "receiver": {
-      "name": "Sonia Akter",
-      "phone": "01844444444",
-      "email": "sonia@example.com",
-      "streetAddress": "555 Flower Street",
-      "city": "Sylhet",
-      "state": "Sylhet",
-      "postalCode": "3100",
-      "country": "Bangladesh",
-      "landmark": "Behind Central Hospital"
-    },
-    "approved": false,
-    "weight": 1.2,
-    "dimensions": { "length": 25, "width": 15, "height": 10 },
-    "contentDescription": "Cosmetics package",
+    "currentStatus": "at_hub",
+    "trackingNumber": "TRK10003",
     "fragile": true,
-    "trackingNumber": "TRK002",
-    "currentStatus": "picked_up",
-    "pickupDate": "2025-08-02T09:00:00.000Z",
-    "expectedDeliveryDate": "2025-08-04T17:00:00.000Z",
-    "actualDeliveryDate": null,
-    "deliveryAttempts": 0,
-    "shippingCost": 180,
+    "shippingCost": 500,
     "paymentStatus": "paid",
-    "paymentMethod": "credit_card"
+    "paymentMethod": "credit_card",
+    "expectedDeliveryDate": "2025-08-22"
   },
   {
-    "sender": {
-      "name": "Hasan Mahmud",
-      "phone": "01755555555",
-      "email": "hasan@example.com",
-      "streetAddress": "12 Station Road",
-      "city": "Barisal",
-      "state": "Barisal",
-      "postalCode": "8200",
-      "country": "Bangladesh",
-      "landmark": "Near Railway Station"
-    },
-    "receiver": {
-      "name": "Nadia Rahman",
-      "phone": "01866666666",
-      "email": "nadia@example.com",
-      "streetAddress": "77 River View",
-      "city": "Rangpur",
-      "state": "Rangpur",
-      "postalCode": "5400",
-      "country": "Bangladesh",
-      "landmark": "Beside City School"
-    },
-    "approved": true,
-    "weight": 3.8,
-    "dimensions": { "length": 40, "width": 25, "height": 20 },
-    "contentDescription": "Kitchen utensils",
-    "fragile": false,
-    "trackingNumber": "TRK003",
-    "currentStatus": "in_transit",
-    "pickupDate": "2025-08-03T11:30:00.000Z",
-    "expectedDeliveryDate": "2025-08-06T19:00:00.000Z",
-    "actualDeliveryDate": null,
+    "currentStatus": "out_for_delivery",
+    "trackingNumber": "TRK10004",
+    "deliveryAttempts": 2,
+    "shippingCost": 150,
+    "paymentStatus": "unpaid",
+    "paymentMethod": "cash_on_delivery",
+    "expectedDeliveryDate": "2025-08-17"
+  },
+  {
+    "currentStatus": "delivered",
+    "trackingNumber": "TRK10005",
     "deliveryAttempts": 1,
     "shippingCost": 300,
     "paymentStatus": "paid",
-    "paymentMethod": "mobile_payment"
+    "paymentMethod": "bank_transfer",
+    "fragile": false
   },
+
   {
     "sender": {
-      "name": "Farid Chowdhury",
-      "phone": "01777777777",
-      "email": "farid@example.com",
-      "streetAddress": "55 Hill View",
-      "city": "Cox's Bazar",
-      "state": "Chattogram",
-      "postalCode": "4700",
-      "country": "Bangladesh",
-      "landmark": "Near Sea Beach"
+      "name": "Alice Johnson",
+      "phone": "+8801711111111",
+      "email": "alice@example.com",
+      "address": "Dhaka, Bangladesh"
     },
     "receiver": {
-      "name": "Tasnim Alam",
-      "phone": "01888888888",
-      "email": "tasnim@example.com",
-      "streetAddress": "101 Rose Garden",
-      "city": "Gazipur",
-      "state": "Dhaka",
-      "postalCode": "1700",
-      "country": "Bangladesh",
-      "landmark": "Opposite College Gate"
+      "name": "Bob Smith",
+      "phone": "+8801722222222",
+      "email": "bob@example.com",
+      "address": "Chittagong, Bangladesh"
     },
-    "approved": true,
-    "weight": 5.0,
-    "dimensions": { "length": 50, "width": 35, "height": 25 },
-    "contentDescription": "Electronics - Laptop",
+    "weight": "2.5",
     "fragile": true,
-    "trackingNumber": "TRK004",
-    "currentStatus": "at_hub",
-    "pickupDate": "2025-08-04T08:45:00.000Z",
-    "expectedDeliveryDate": "2025-08-08T20:00:00.000Z",
-    "actualDeliveryDate": null,
-    "deliveryAttempts": 0,
-    "shippingCost": 500,
-    "paymentStatus": "unpaid",
-    "paymentMethod": "cash_on_delivery"
+    "currentStatus": "pending"
   },
   {
     "sender": {
-      "name": "Imran Khan",
-      "phone": "01799999999",
-      "email": "imran@example.com",
-      "streetAddress": "99 Victory Street",
-      "city": "Mymensingh",
-      "state": "Mymensingh",
-      "postalCode": "2200",
-      "country": "Bangladesh",
-      "landmark": "Near University Gate"
+      "name": "Carol White",
+      "phone": "+8801733333333",
+      "email": "carol@example.com",
+      "address": "Sylhet, Bangladesh"
     },
     "receiver": {
-      "name": "Rumana Sultana",
-      "phone": "01800000000",
-      "email": "rumana@example.com",
-      "streetAddress": "34 Lotus Avenue",
-      "city": "Dhaka",
-      "state": "Dhaka",
-      "postalCode": "1212",
-      "country": "Bangladesh",
-      "landmark": "Next to Police Station"
+      "name": "David Lee",
+      "phone": "+8801744444444",
+      "email": "david@example.com",
+      "address": "Rajshahi, Bangladesh"
     },
-    "approved": true,
-    "weight": 4.5,
-    "dimensions": { "length": 45, "width": 30, "height": 20 },
-    "contentDescription": "Furniture parts",
+    "weight": "5",
     "fragile": false,
-    "trackingNumber": "TRK005",
-    "currentStatus": "out_for_delivery",
-    "pickupDate": "2025-08-05T07:15:00.000Z",
-    "expectedDeliveryDate": "2025-08-07T17:00:00.000Z",
-    "actualDeliveryDate": null,
-    "deliveryAttempts": 0,
-    "shippingCost": 450,
-    "paymentStatus": "paid",
-    "paymentMethod": "credit_card"
+    "contentDescription": "Books",
+    "currentStatus": "in_transit"
+  },
+  {
+    "sender": {
+      "name": "Eve Martin",
+      "phone": "+8801755555555",
+      "email": "eve@example.com",
+      "address": "Khulna, Bangladesh"
+    },
+    "receiver": {
+      "name": "Frank Wilson",
+      "phone": "+8801766666666",
+      "email": "frank@example.com",
+      "address": "Barishal, Bangladesh"
+    },
+    "weight": "1",
+    "fragile": true,
+    "trackingNumber": "TRK123456",
+    "currentStatus": "delivered"
+  },
+  {
+    "sender": {
+      "name": "Grace Brown",
+      "phone": "+8801777777777",
+      "email": "grace@example.com",
+      "address": "Rangpur, Bangladesh"
+    },
+    "receiver": {
+      "name": "Henry Green",
+      "phone": "+8801788888888",
+      "email": "henry@example.com",
+      "address": "Mymensingh, Bangladesh"
+    },
+    "weight": "3.2",
+    "fragile": false,
+    "contentDescription": "Clothes",
+    "currentStatus": "picked_up"
+  },
+  {
+    "sender": {
+      "name": "Isabel Young",
+      "phone": "+8801799999999",
+      "email": "isabel@example.com",
+      "address": "Dhaka, Bangladesh"
+    },
+    "receiver": {
+      "name": "Jack Taylor",
+      "phone": "+8801700000000",
+      "email": "jack@example.com",
+      "address": "Sylhet, Bangladesh"
+    },
+    "weight": "7",
+    "fragile": true,
+    "dimensions": { "length": 40, "width": 30, "height": 20 },
+    "currentStatus": "out_for_delivery"
+  },
+  {
+    "sender": {
+      "name": "Kathy Adams",
+      "phone": "+8801712121212",
+      "email": "kathy@example.com",
+      "address": "Chittagong, Bangladesh"
+    },
+    "receiver": {
+      "name": "Leo Turner",
+      "phone": "+8801723232323",
+      "email": "leo@example.com",
+      "address": "Dhaka, Bangladesh"
+    },
+    "weight": "4.8",
+    "fragile": false,
+    "trackingNumber": "TRK987654",
+    "currentStatus": "returned"
+  },
+  {
+    "sender": {
+      "name": "Mia Scott",
+      "phone": "+8801734343434",
+      "email": "mia@example.com",
+      "address": "Khulna, Bangladesh"
+    },
+    "receiver": {
+      "name": "Nathan Harris",
+      "phone": "+8801745454545",
+      "email": "nathan@example.com",
+      "address": "Rajshahi, Bangladesh"
+    },
+    "weight": "0.9",
+    "fragile": true,
+    "contentDescription": "Smartphone",
+    "currentStatus": "at_hub"
+  },
+  {
+    "sender": {
+      "name": "Olivia Hall",
+      "phone": "+8801756565656",
+      "email": "olivia@example.com",
+      "address": "Barishal, Bangladesh"
+    },
+    "receiver": {
+      "name": "Paul King",
+      "phone": "+8801767676767",
+      "email": "paul@example.com",
+      "address": "Rangpur, Bangladesh"
+    },
+    "weight": "10",
+    "fragile": false,
+    "dimensions": { "length": 60, "width": 40, "height": 25 },
+    "currentStatus": "pending"
+  },
+  {
+    "sender": {
+      "name": "Quinn Evans",
+      "phone": "+8801778787878",
+      "email": "quinn@example.com",
+      "address": "Mymensingh, Bangladesh"
+    },
+    "receiver": {
+      "name": "Rachel Baker",
+      "phone": "+8801789898989",
+      "email": "rachel@example.com",
+      "address": "Sylhet, Bangladesh"
+    },
+    "weight": "6",
+    "fragile": true,
+    "contentDescription": "Glassware",
+    "currentStatus": "in_transit"
+  },
+  {
+    "sender": {
+      "name": "Sam Walker",
+      "phone": "+8801790909090",
+      "email": "sam@example.com",
+      "address": "Dhaka, Bangladesh"
+    },
+    "receiver": {
+      "name": "Tina Moore",
+      "phone": "+8801701010101",
+      "email": "tina@example.com",
+      "address": "Chittagong, Bangladesh"
+    },
+    "weight": "8.5",
+    "fragile": false,
+    "trackingNumber": "TRK555555",
+    "currentStatus": "delivered"
   }
 ]
