@@ -9,7 +9,7 @@ import { UserModel } from "./userModel";
 import httpStatus from "http-status-codes"
 
 const createUser = async (payload: Partial<IUser>) => {
-    const { email, password, ...rest } = payload
+    const { name, email, password, ...rest } = payload
 
     if (!email || !password) {
         throw new createAppError(httpStatus.BAD_REQUEST, "Email and password are required");
@@ -33,7 +33,7 @@ const createUser = async (payload: Partial<IUser>) => {
 
 
     const user = await UserModel.create({
-        name: rest.name,
+        name,
         email,
         password: hashedPassword,
         auths: [authProvider],
@@ -44,7 +44,7 @@ const createUser = async (payload: Partial<IUser>) => {
     const jwtPayload = {
         user_id: user._id,
         email: user.email,
-        name: rest.name,
+        name: name,
         role: user.role,
         verified: isVerified,
     }
