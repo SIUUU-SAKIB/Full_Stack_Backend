@@ -1,13 +1,10 @@
 export enum ParcelStatus {
     PENDING = "pending",
-    PICKED_UP = "picked_up",
     IN_TRANSIT = "in_transit",
-    AT_HUB = "at_hub",
-    OUT_FOR_DELIVERY = "out_for_delivery",
     DELIVERED = "delivered",
-    RETURNED = "returned",
     CANCELLED = "cancelled",
-    APPROVED = "approved"
+    APPROVED = "approved",
+    REJECTED = "rejected"
 }
 
 export type PaymentStatus = "unpaid" | "paid" | "refunded";
@@ -21,16 +18,22 @@ export interface IAddress {
 }
 
 export interface IParcel {
+    parcelId:string,
+    userId:string,
+    receiverEmail:string,
     sender: IAddress,
     receiver: IAddress,
     accessToken?: string,
-    weight: number,
+    weight: string,
     dimentions?: { length: number; width: number; height: number },
     contentDescription?: string,
     fragile?: boolean,
     trackingNumber?: string,
     currentStatus: ParcelStatus,
     pickupDate?: Date,
+    rejectedDate?:Date,
+    approvalDate?:Date,
+    transitDate?:Date,
     expectedDeliveryDate?: Date;
     actualDeliveryDate?: Date;
     deliveryAttempts?: number;

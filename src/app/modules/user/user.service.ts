@@ -47,7 +47,7 @@ const createUser = async (payload: Partial<IUser>) => {
     };
 
     // Generate token
-    const token = jwtTokens.generateToken(jwtPayload, '2d');
+    const token = jwtTokens.generateToken(jwtPayload);
     user.accessToken = token;
 
     await user.save();
@@ -89,7 +89,7 @@ const createAdmin = async (payload: Partial<IUser>) => {
         role: user.role
     }
 
-    const token = jwtTokens.generateToken(jwtPayload, '2d')
+    const token = jwtTokens.generateToken(jwtPayload)
     user.accessToken = token
     await user.save()
     return {
@@ -99,13 +99,24 @@ const createAdmin = async (payload: Partial<IUser>) => {
 }
 // GET ALL USER : ONLY ADMIN, SUPER_ADMIN
 
-const getAllUser = async () => {
-    const allUser = await UserModel.find()
-    const totalUser = await UserModel.countDocuments()
-    return {
-        allUser, totalUser
-    }
-}
+const getAllUser = async (page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+
+  const allUser = await UserModel.find()
+    .skip(skip)
+    .limit(limit);
+
+  const totalUser = await UserModel.countDocuments();
+
+  return {
+    allUser,
+    totalUser,
+    totalPages: Math.ceil(totalUser / limit),
+    currentPage: page,
+  };
+};
+
+
 
 // get user by id
 const getUserById = async (id: string) => {
@@ -119,7 +130,6 @@ const deleteUser = async (id: string, currentUser: JwtPayload) => {
     const curUser = await UserModel.findById(currentUser.userId)
 
     const findUser = await UserModel.findById({ _id: id })
-    console.log(curUser?._id, findUser?._id)
     if (!findUser) {
         throw new createAppError(404, 'User does not exist')
     }
@@ -132,12 +142,12 @@ const deleteUser = async (id: string, currentUser: JwtPayload) => {
     }
 
 }
-const deleteByAdmin = async (id: string) => {
-    const findUser = await UserModel.findById({ _id: id })
+const deleteByAdmin = async (email: string) => {
+    const findUser = await UserModel.findOne({ email })
     if (!findUser) {
         throw new createAppError(404, 'User does not exist')
     }
-    const user = await UserModel.findByIdAndDelete({ _id: id })
+    const user = await UserModel.findOneAndDelete({ email })
     return user
 
 }
@@ -174,14 +184,21 @@ const updateUserbyAdmin = async (id: string, payload: Partial<IUser>) => {
     return user
 }
 // *VERIFY USER ONLY ADMIN
-const verifyUser = async (id: string) => {
-    const findUser = await UserModel.findById(id)
-    if (!findUser) { throw new createAppError(httpStatus.BAD_REQUEST, 'User does not exist') }
-    if (findUser) {
-        findUser.isVerified = true
-        await findUser.save()
+const verifyUser = async (email: string) => {
+
+    const findUser = await UserModel.findOne({ email });
+
+    if (!findUser) {
+        throw new createAppError(httpStatus.BAD_REQUEST, 'User does not exist');
     }
-}
+
+
+    findUser.isVerified = true;
+    await findUser.save();
+
+    return findUser;
+};
+
 
 export const userService = {
     createUser, getAllUser, deleteUser, updateUser, createAdmin, verifyUser, getUserById, deleteByAdmin, updateUserbyAdmin

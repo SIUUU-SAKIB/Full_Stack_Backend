@@ -14,3 +14,4 @@ const comparePassword = async (plain: string, hashed: string): Promise<boolean> 
 export const bcryptFunction = {
     hashedPassword, comparePassword
 }
+

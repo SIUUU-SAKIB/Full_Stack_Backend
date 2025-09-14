@@ -1,16 +1,24 @@
 import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
+import { setAuthCookies } from "../../utils/storeCookie";
+import { jwtTokens } from "../../utils/jwtTokens";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userService.createUser(req.body)
+
+        const accessToken = jwtTokens.generateToken(user)
+        const refreshToken = jwtTokens.generateRefreshToken(user)
+        setAuthCookies(res, accessToken, refreshToken)
+        console.log(user)
         sendResponse(res, {
             success: true,
             statusCode: 200,
             message: "User Created Successfully",
             data: user
         })
+
     } catch (error: any) {
         next(error)
     }
@@ -32,13 +40,18 @@ const createAdmin = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = await userService.getAllUser()
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const user = await userService.getAllUser(page, limit)
 
         sendResponse(res, {
             success: true,
             statusCode: 200,
-            message: "All user retreived Successfully",
+            message: "All users retrieved successfully",
             total: user.totalUser,
+            totalPages: user.totalPages,
+            currentPage: user.currentPage,
             data: user.allUser,
         })
     } catch (error: any) {
@@ -64,8 +77,8 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const deleteByAdmin = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { id } = req.params
-        await userService.deleteByAdmin(id)
+        const { email } = req.body
+        await userService.deleteByAdmin(email)
         sendResponse(res, {
             success: true,
             statusCode: 200,
@@ -108,7 +121,8 @@ const updateUserbyAdmin = async (req: Request, res: Response, next: NextFunction
 }
 const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        await userService.verifyUser(req.params.id)
+        const { email } = req.body
+        await userService.verifyUser(email)
         sendResponse(res, {
             success: true,
             statusCode: 200,

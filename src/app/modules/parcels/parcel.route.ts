@@ -6,23 +6,25 @@ import { authMiddleware } from "../../middlewares/authMiddleware";
 
 export const parcelRouter = Router()
 // *create parcel
-parcelRouter.post('/create-parcel', vaildateZodSchema(ParcelZodSchema), authMiddleware('sender', 'admin', 'super_admin'), parcelController.createParcel)
+parcelRouter.post('/create-parcel', vaildateZodSchema(ParcelZodSchema), authMiddleware('sender'), parcelController.createParcel)
 
 // *get all parcels
 parcelRouter.get('/all-parcel', authMiddleware('admin', 'super_admin'), parcelController.getAllParcels)
 
 // *update parcel
-parcelRouter.patch('/parcel-status/:id', authMiddleware('admin', 'super_admin'), vaildateZodSchema(updateParcelZodSchema), parcelController.updateParcel)
+parcelRouter.patch('/approve-parcel', authMiddleware('admin', 'super_admin'), vaildateZodSchema(updateParcelZodSchema), parcelController.approveParcel)
 
 // *delete parcel
-parcelRouter.delete('/delete/:id', authMiddleware('admin', 'super_admin'), parcelController.deleteParcel)
+parcelRouter.delete('/delete-parcel', authMiddleware('admin', 'super_admin'), parcelController.deleteParcel)
 
 // *user delete parcel 
-
-// parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender'), parcelController.deleteParcel) 
+parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender', "receiver"), parcelController.deleteParcel)
 
 // *get parcel status
 parcelRouter.get('/current-status', authMiddleware('sender', 'receiver'), parcelController.parcelStatus)
 
 // *cancel parcel
-parcelRouter.patch('/cancel-parcel', authMiddleware("sender", "receiver"), parcelController.cancelParcel)
+parcelRouter.delete('/cancel-parcel', authMiddleware("sender", "receiver"), parcelController.cancelParcel)
+
+parcelRouter.get('/getParcelByUser/:id', authMiddleware('sender', 'receiver'), parcelController.getParcelByUser)
+parcelRouter.get(`/get-receiver-parcel/:email`, authMiddleware('receiver'), parcelController.getReceiverParcel)

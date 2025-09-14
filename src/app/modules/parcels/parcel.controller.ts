@@ -3,9 +3,9 @@ import { parcelService } from "./parcel.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from 'http-status-codes'
 const createParcel = async (req: Request, res: Response, next: NextFunction) => {
-    
+
     try {
-        const {email} = req.user
+        const { email } = req.user
         const result = await parcelService.createParcel(req.body, email)
 
         sendResponse(res, {
@@ -20,29 +20,35 @@ const createParcel = async (req: Request, res: Response, next: NextFunction) => 
 }
 
 
+// controller/parcel.controller.ts
 const getAllParcels = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await parcelService.getAllParcels()
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const result = await parcelService.getAllParcels(page, limit);
+
         sendResponse(res, {
             success: true,
-            statusCode: httpStatus.ACCEPTED,
-            message: "All parcels retreived successfully 😍😍😍",
+            statusCode: httpStatus.OK,
+            message: "All parcels retrieved successfully 😍😍😍",
             total: result.totalParcel,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
             data: result.parcels,
-
-        })
+        });
     } catch (error: any) {
-        next(error)
+        next(error);
     }
-}
+};
 
 // update parcel
-const updateParcel = async (
+const approveParcel = async (
     req: Request,
     res: Response,
     next: NextFunction) => {
     try {
-        const result = await parcelService.updateParcel(req.body, req.params.id)
+        const result = await parcelService.approveParcel(req.body)
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.ACCEPTED,
@@ -61,7 +67,7 @@ const deleteParcel = async (
     res: Response,
     next: NextFunction) => {
     try {
-        await parcelService.deleteParcel(req.params.id)
+        await parcelService.deleteParcel(req.body.id)
         sendResponse(res, {
             success: true,
             statusCode: httpStatus.ACCEPTED,
@@ -111,6 +117,31 @@ const cancelParcel = async (req: Request, res: Response, next: NextFunction) => 
     }
 
 }
+const getParcelByUser = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.params.id)
+    const parcels = await parcelService.getParcelByUser(req.params.id);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.ACCEPTED,
+        message: `Successfully fetched Data`,
+        data: [parcels.parcels, parcels.totalParcel, parcels.approvedParcels, parcels.deliveredParcels, parcels.pendingParcels]
+
+    })
+}
+
+const getReceiverParcel = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.params
+    const parcels = await parcelService.getReceiverParcel(email)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.ACCEPTED,
+        message: `Successfully fetched all the parcels 😍`,
+        data: parcels
+
+    })
+
+}
 export const parcelController = {
-    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus, cancelParcel
+    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, getReceiverParcel
 }

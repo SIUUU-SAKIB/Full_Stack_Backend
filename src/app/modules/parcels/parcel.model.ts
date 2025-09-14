@@ -21,10 +21,12 @@ const DimensionsSchema = new Schema(
 );
 
 const ParcelSchema = new Schema<IParcel>({
+    userId:{type:String},
+    receiverEmail:{type:String},
     sender: { type: AddressSchema, required: true },
     receiver: { type: AddressSchema, required: true },
     accessToken: { type: String },
-    weight: { type: Number, required: true },
+    weight: { type: String, required: true },
     dimentions: { type: DimensionsSchema },
     contentDescription: { type: String },
     fragile: { type: Boolean },
@@ -39,6 +41,7 @@ const ParcelSchema = new Schema<IParcel>({
     expectedDeliveryDate: { type: Date },
     actualDeliveryDate: { type: Date },
     deliveryAttempts: { type: Number, default: 0 },
+    rejectedDate:{type:Date},
     shippingCost: { type: Number },
     paymentStatus: {
         type: String,

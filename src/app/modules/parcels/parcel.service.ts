@@ -7,12 +7,19 @@ import httpStatus from "http-status-codes";
 import { ParcelModel } from "./parcel.model";
 import { JwtPayload } from "jsonwebtoken";
 import { Request } from "express";
+import { ParcelStatusEnum } from "./parcel.validation";
 
 
 // *CREAE A PARCEL REQUEST : ONLY SENDER
 
 const createParcel = async (payload: Partial<IParcel>, email: string) => {
     const { receiver, trackingNumber, ...rest } = payload;
+    const recEmail = receiver?.email
+    const findReceiver = await UserModel.findOne({ email: recEmail })
+    console.log(recEmail)
+    if (!findReceiver) {
+        throw new createAppError(httpStatus.NOT_FOUND, 'Receiver does not exist on our database')
+    }
     const findUser = await UserModel.findOne({ email })
     if (findUser?.isVerified === false) {
         throw new createAppError(httpStatus.BAD_REQUEST, 'User must be verified by the admin')
@@ -49,21 +56,34 @@ const createParcel = async (payload: Partial<IParcel>, email: string) => {
 
 // *UPDATE PARCEL : ONLY ADMIN || SUPER_ADMIN
 
-const updateParcel = async (payload: Partial<IParcel>, id: any) => {
-
-    const parcel = await ParcelModel.findByIdAndUpdate(id, payload)
+const approveParcel = async (payload: Partial<IParcel>) => {
+    const { parcelId } = payload
+    const parcel = await ParcelModel.findByIdAndUpdate(parcelId, payload)
     await parcel?.save()
     return parcel
 }
 
 // *GET ALL PARCEL :ONLY ADMIN || SUPER_ADMIN
-const getAllParcels = async () => {
-    const parcels = await ParcelModel.find()
-    const totalParcel = await ParcelModel.countDocuments()
-    return {
-        parcels, totalParcel
-    }
-}
+// service/parcel.service.ts
+const getAllParcels = async (page: number, limit: number) => {
+  const skip = (page - 1) * limit;
+
+  const parcels = await ParcelModel.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 }); // optional: latest first
+
+  const totalParcel = await ParcelModel.countDocuments();
+
+  return {
+    parcels,
+    totalParcel,
+    totalPages: Math.ceil(totalParcel / limit),
+    currentPage: page,
+  };
+};
+
+
 
 // *VERIFY USER ONLY ADMIN
 const verifyUser = async (id: string) => {
@@ -112,16 +132,42 @@ const cancelParcel = async (trackingNumber: string) => {
 
     if (!isParcelExist) throw new createAppError(httpStatus.NOT_FOUND, 'Parcel does not exist😔')
 
-    if (isParcelExist?.currentStatus !== "pending") {
-        throw new createAppError(httpStatus.EXPECTATION_FAILED, `you cannot cancel this parcel because it's been already in ${isParcelExist.currentStatus}`)
+    if (isParcelExist?.currentStatus !== "pending" && isParcelExist?.currentStatus !== "delivered") {
+        throw new createAppError(httpStatus.EXPECTATION_FAILED, `You cannot cancel this parcel because it's already in ${isParcelExist.currentStatus}`);
     }
-    isParcelExist.currentStatus = ParcelStatus.CANCELLED
-    await isParcelExist.save()
+
+    const cancelParcel = isParcelExist.deleteOne({ trackingNumber })
+
+    return cancelParcel
+}
+
+const getParcelByUser = async (id: string) => {
+
+    const parcels = await ParcelModel.find({ userId: id })
+    const totalParcel = await ParcelModel.countDocuments({ userId: id });
+
+    const pendingParcels = await ParcelModel.countDocuments({ userId: id, currentStatus: "pending" });
+    const approvedParcels = await ParcelModel.countDocuments({ userId: id, currentStatus: "approved" });
+    const deliveredParcels = await ParcelModel.countDocuments({ userId: id, currentStatus: "delivered" });
+
+
+    return {
+        parcels,
+        totalParcel,
+        pendingParcels,
+        approvedParcels,
+        deliveredParcels,
+    };
+};
 
 
 
-    return isParcelExist
+
+const getReceiverParcel = async (email: string) => {
+
+    const parcels = await ParcelModel.find({ "receiverEmail": email })
+    return parcels
 }
 export const parcelService = {
-    createParcel, getAllParcels, updateParcel, deleteParcel, parcelStatus, cancelParcel
+    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, verifyUser, getReceiverParcel
 }

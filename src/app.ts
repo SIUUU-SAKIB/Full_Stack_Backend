@@ -8,7 +8,10 @@ import { notFoundHandler } from "./app/middlewares/notFound"
 const app = express()
 
 // ?MIDDLEWARES
-app.use(cors())
+app.use(cors({
+    credentials: true,
+    origin: "http://localhost:5173"
+}))
 app.use(express.json())
 app.use(cookieParser())
 

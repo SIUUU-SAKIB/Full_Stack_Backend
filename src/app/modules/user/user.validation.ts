@@ -15,7 +15,7 @@ const createUserZodSchema = z.object({
         message: "Phone number must be a valid Bangladeshi number..."
     }).optional()
     ,
-    role: z.enum(Object.values(Role) as [string]),
+    role: z.enum(Object.values(Role) as [string]).optional(),
     address: z.object({
         street: z.string().min(5, { message: 'Street name cannot be smaller than 5 characters' }).max(50, { message: 'Street name cannot exceed 50 characters.' }).optional(),
         city: z.string().min(3, { message: 'City name cannot be smaller than 3 characters' }).max(30, { message: 'Street name cannot exceed 30 characters.' }).optional(),

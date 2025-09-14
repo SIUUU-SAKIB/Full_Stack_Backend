@@ -10,6 +10,7 @@ export const ParcelStatusEnum = z.enum([
   "delivered",
   "returned",
   "cancelled",
+  "rejected"
 ]);
 
 export const PaymentStatusEnum = z.enum(["unpaid", "paid", "refunded"]);
@@ -33,10 +34,12 @@ const AddressSchema = z.object({
 
 
 export const ParcelZodSchema = z.object({
+  userId:z.string().optional(),
+  receiverEmail:z.string({message:"Receiver Email Required"}),
   sender: AddressSchema,
   receiver: AddressSchema,
   accessToken: z.string().optional(),
-  weight: z.coerce.number(), 
+  weight: z.coerce.string(), 
   dimensions: DimensionsSchema.optional(),
   contentDescription: z.string(),
   fragile: z.boolean(),
@@ -49,11 +52,14 @@ export const ParcelZodSchema = z.object({
 
 
 export const updateParcelZodSchema = z.object({
+  parcelId:z.string().optional(),
   currentStatus: ParcelStatusEnum,
   deliveryAttempts: z.number().int().optional(),
   shippingCost: z.number().optional(),
   paymentStatus: PaymentStatusEnum.optional(),
   fragile: z.boolean().optional(),
   expectedDeliveryDate: z.coerce.date().optional(),
-
+  approvalDate:z.coerce.date().optional(),
+  transitDate:z.coerce.date().optional(),
+  rejectedDate:z.coerce.date().optional()
 })

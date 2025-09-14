@@ -26,7 +26,6 @@ export const seedSuperAdmin = async () => {
                 email: superAdmin.email,
                 role: superAdmin.role,
             },
-            "20d"
         );
 
         superAdmin.accessToken = token;

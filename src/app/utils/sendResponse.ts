@@ -4,7 +4,9 @@ interface IApiResponse<T> {
   statusCode: number;
   message?: string;
   total?:number,
-  data?: T;
+  data?: T,
+  totalPages?:number,
+  currentPage?:number
 }
 
 export const sendResponse = <T>(res: Response, {
@@ -20,6 +22,7 @@ export const sendResponse = <T>(res: Response, {
     message,
     total,
     data,
+
 
   });
 };
