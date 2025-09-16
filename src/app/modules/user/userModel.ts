@@ -8,13 +8,13 @@ const userSchema = new Schema<IUser>(
         email: { type: String, required: true, unique: true, trim: true },
 
         password: { type: String, trim: true },
-       accessToken:{type:String},
+        accessToken: { type: String },
         role: {
             type: String,
             enum: Object.values(Role),
             default: Role.public
         },
-
+        blocked: { type: Boolean, default:false },
         phone: { type: Number, trim: true },
 
         profileImage: { type: String },
@@ -27,7 +27,7 @@ const userSchema = new Schema<IUser>(
             postalCode: { type: Number },
             country: { type: String },
         },
-        
+
         auths: [
             {
                 provider: {
@@ -38,11 +38,11 @@ const userSchema = new Schema<IUser>(
                 providerId: { type: String, required: true },
             }
         ],
-        parcelId:{
-            type:Schema.Types.ObjectId, ref:'parcel'
+        parcelId: {
+            type: Schema.Types.ObjectId, ref: 'parcel'
         }
     },
-    { timestamps: true, versionKey:false }
+    { timestamps: true, versionKey: false }
 )
 
 export const UserModel = model<IUser>("User", userSchema)

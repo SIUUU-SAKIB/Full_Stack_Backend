@@ -30,8 +30,8 @@ export interface IUser  {
      city:string,
      postalCode:number,
      country:string,
-     
     },
+    blocked?:boolean
     auths?:IAuthProvider[],
     parcelId:Types.ObjectId
 }

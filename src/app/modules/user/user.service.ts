@@ -115,7 +115,22 @@ const getAllUser = async (page = 1, limit = 10) => {
     currentPage: page,
   };
 };
+const getAdmins = async (page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
 
+  const allUser = await AdminModel.find()
+    .skip(skip)
+    .limit(limit);
+
+  const totalUser = await UserModel.countDocuments();
+
+  return {
+    allUser,
+    totalUser,
+    totalPages: Math.ceil(totalUser / limit),
+    currentPage: page,
+  };
+};
 
 
 // get user by id
@@ -198,8 +213,33 @@ const verifyUser = async (email: string) => {
 
     return findUser;
 };
+const blockUser = async (email: string) => {
+
+    const findUser = await UserModel.findOne({ email });
+
+    if (!findUser) {
+        throw new createAppError(httpStatus.BAD_REQUEST, 'User does not exist');
+    }
 
 
+    findUser.blocked = true;
+    await findUser.save();
+
+    return findUser;
+};
+const unblockUser = async (email: string) => {
+
+    const findUser = await UserModel.findOne({ email });
+
+    if (!findUser) {
+        throw new createAppError(httpStatus.BAD_REQUEST, 'User does not exist');
+    }
+
+    findUser.blocked = false;
+    await findUser.save();
+
+    return findUser;
+};
 export const userService = {
-    createUser, getAllUser, deleteUser, updateUser, createAdmin, verifyUser, getUserById, deleteByAdmin, updateUserbyAdmin
+getAdmins, createUser, getAllUser, deleteUser, updateUser, createAdmin, verifyUser, getUserById, deleteByAdmin, updateUserbyAdmin, blockUser, unblockUser
 }

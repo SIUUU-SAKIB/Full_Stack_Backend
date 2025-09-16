@@ -59,6 +59,27 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const getAdmins = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const page = parseInt(req.query.page as string) || 1
+        const limit = parseInt(req.query.limit as string) || 10
+
+        const user = await userService.getAdmins(page, limit)
+
+        sendResponse(res, {
+            success: true,
+            statusCode: 200,
+            message: "All admins retrieved successfully",
+            total: user.totalUser,
+            totalPages: user.totalPages,
+            currentPage: user.currentPage,
+            data: user.allUser,
+        })
+    } catch (error: any) {
+        next(error)
+    }
+}
+
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params
@@ -133,7 +154,33 @@ const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 
 }
+const blockUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email } = req.body
+        await userService.blockUser(email)
+        sendResponse(res, {
+            success: true,
+            statusCode: 200,
+            message: "User blocked Successfully"
+        })
+    } catch (error) {
+        next(error)
+    }
 
+}
+const unblockUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email } = req.body
+        await userService.unblockUser(email)
+        sendResponse(res, {
+            success: true,
+            statusCode: 200,
+            message: "User unblocked successfully"
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.body
     try {
@@ -149,5 +196,5 @@ const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 export const userController = {
-    createUser, getAllUser, deleteUser, updateUser, createAdmin, verifyUser, getUserById, deleteByAdmin, updateUserbyAdmin
+    createUser, getAllUser, deleteUser, updateUser, createAdmin, verifyUser, getUserById, deleteByAdmin, updateUserbyAdmin, blockUser, unblockUser, getAdmins
 }

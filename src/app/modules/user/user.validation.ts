@@ -4,6 +4,7 @@ import { Role } from "./user.interface";
 const createUserZodSchema = z.object({
     name: z.string({ message: 'Name must be a string' }).min(2, { message: 'Name cannot be smaller than two characters' }).max(30, { message: 'Name cannot exceed thirty characters.' }),
     email: z.email(),
+    blocked:z.boolean().optional(),
     password: z.string().regex(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         {

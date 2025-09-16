@@ -23,11 +23,14 @@ userRoutes.get("/get-user", authMiddleware("admin", "super_admin"), userControll
 // *VERIFY USER
 userRoutes.patch('/verify-user', authMiddleware("admin", "super_admin"), userController.verifyUser)
 
+userRoutes.patch('/block-user', authMiddleware("admin", "super_admin"), userController.blockUser)
+userRoutes.patch('/unblock-user', authMiddleware("admin", "super_admin"), userController.unblockUser)
 // *DELETE USER BY ID
 userRoutes.delete('/delete-user/:id', authMiddleware(...Object.values(Role)), userController.deleteUser)
 
 // * DELETE BY ADMIN, ANY USER
 userRoutes.delete('/delete-by-admin', authMiddleware('admin', 'super_admin'), userController.deleteByAdmin)
+userRoutes.get('/all-admins', authMiddleware("super_admin"), userController.getAdmins)
 // *UPDATE USER BY ID
 userRoutes.patch('/update-user/:id', authMiddleware(...Object.values(Role)), vaildateZodSchema(zodSchemas.updateUserZodSchema), userController.updateUser)
 // *UPDATE USER BY ADMIN

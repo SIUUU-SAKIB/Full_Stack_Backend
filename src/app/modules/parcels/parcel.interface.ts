@@ -34,6 +34,7 @@ export interface IParcel {
     rejectedDate?:Date,
     approvalDate?:Date,
     transitDate?:Date,
+    deliveredDate?:Date,
     expectedDeliveryDate?: Date;
     actualDeliveryDate?: Date;
     deliveryAttempts?: number;
