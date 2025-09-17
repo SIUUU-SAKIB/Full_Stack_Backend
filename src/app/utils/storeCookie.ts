@@ -3,16 +3,14 @@ import { envVariable } from "../config/env.config";
 
 export const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {
 
-
-
   res.cookie("accessToken", accessToken, {
-    httpOnly: false,
+    httpOnly: true,
     secure: envVariable.NODE_ENV === "production",
     sameSite: "none",
   });
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: false,
+    httpOnly: true,
     secure: envVariable.NODE_ENV === "production",
     sameSite: "none",
   });
