@@ -6,13 +6,13 @@ export const setAuthCookies = (res: Response, accessToken: string, refreshToken:
 
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
+    httpOnly: false,
     secure: envVariable.NODE_ENV === "production",
     sameSite: "none",
   });
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
+    httpOnly: false,
     secure: envVariable.NODE_ENV === "production",
     sameSite: "none",
   });
