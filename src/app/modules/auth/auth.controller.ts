@@ -68,25 +68,32 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
 
 
 const logout = (req: Request, res: Response, next: NextFunction) => {
+    const isProduction = process.env.NODE_ENV === "production";
 
+    // Clear the refreshToken cookie
     res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        httpOnly: true,  // Ensures the cookie is not accessible via JavaScript
+        secure: isProduction,  // Set to true in production for HTTPS
+        sameSite: "none",  // Allow cross-origin requests
+        expires: new Date(0),  // Expire the cookie immediately
     });
 
+    // Clear the accessToken cookie
     res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        httpOnly: true,  // Ensures the cookie is not accessible via JavaScript
+        secure: isProduction,  // Set to true in production for HTTPS
+        sameSite: "none",  // Allow cross-origin requests
+        expires: new Date(0),  // Expire the cookie immediately
     });
 
+    // Send a response indicating successful logout
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.ACCEPTED,
         message: "Logout successful"
     });
 };
+
 
 // controllers/auth.controller.ts
 const getMe = async (req: Request, res: Response) => {
