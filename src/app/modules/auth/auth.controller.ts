@@ -68,21 +68,25 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
 
 
 const logout = (req: Request, res: Response, next: NextFunction) => {
+    const isProduction = process.env.NODE_ENV === "production";
+
     res.clearCookie("refreshToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: isProduction,
         sameSite: "none",
     });
+
     res.clearCookie("accessToken", {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: isProduction,
         sameSite: "none",
     });
+
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.ACCEPTED,
         message: "Logout successful"
-    })
+    });
 };
 // controllers/auth.controller.ts
 const getMe = async (req: Request, res: Response) => {
@@ -92,7 +96,7 @@ const getMe = async (req: Request, res: Response) => {
 
     res.json({
         success: true,
-        currentUser:currentUser, 
+        currentUser: currentUser,
     });
 };
 
