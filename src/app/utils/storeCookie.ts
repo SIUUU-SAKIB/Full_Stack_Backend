@@ -1,22 +1,19 @@
 import { Response } from "express";
+import { envVariable } from "../config/env.config";
 
 export const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {
 
-  const isProduction = process.env.NODE_ENV === "production";
 
-res.cookie("accessToken", accessToken, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none",
-  domain: ".onrender.com",  
-  maxAge: 24 * 60 * 60 * 1000,  
-});
 
-res.cookie("refreshToken", refreshToken, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "none",
-  domain: ".onrender.com", 
-  maxAge: 7 * 24 * 60 * 60 * 1000,  
-});
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: envVariable.NODE_ENV === "production",
+    sameSite: "none",
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: envVariable.NODE_ENV === "production",
+    sameSite: "none",
+  });
 };
