@@ -9,7 +9,7 @@ const app = express()
 
 // ?MIDDLEWARES
 app.use(cors({
-    origin:"http://localhost:5173", 
+    origin:"https://stately-daifuku-fcbcb4.netlify.app", 
     credentials:true
 }))
 
