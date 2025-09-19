@@ -5,7 +5,7 @@ import http from "http"
 import { seedSuperAdmin } from "./app/utils/seedSuperAdmin"
 const server = http.createServer(app)
 // MONGODB DATABASE
-const PORT = process.env.PORT || envVariable.PORT || 4000
+const PORT = process.env.PORT || envVariable.PORT || 2000
 const startMongoose = async () => {
     try {
         await mongoose.connect(`${envVariable.DATABASE_URL}`)
