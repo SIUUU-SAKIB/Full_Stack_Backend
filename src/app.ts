@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "https://ubiquitous-gecko-f5b739.netlify.app",
+        origin: "https://fascinating-otter-9896e1.netlify.app",
         credentials: true,
     })
 );
