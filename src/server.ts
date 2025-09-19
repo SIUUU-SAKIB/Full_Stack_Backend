@@ -11,7 +11,7 @@ const startMongoose = async () => {
         await mongoose.connect(`${envVariable.DATABASE_URL}`)
         console.log("MONGODB CONNECTED SUCCESSFULLY 😍")
         await seedSuperAdmin()
-        server.listen(PORT, () => { console.log(`SERVER IS RUNNING AT http://localhost:${PORT}`) })
+       app.listen(PORT, () => { console.log(`SERVER IS RUNNING AT http://localhost:${PORT}`) })
     } catch (error) {
         console.log(error)
         process.exit(1)
