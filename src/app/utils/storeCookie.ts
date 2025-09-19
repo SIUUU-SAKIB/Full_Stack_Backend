@@ -4,10 +4,10 @@ import { envVariable } from "../config/env.config";
 export const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {
   const isProduction = process.env.NODE_ENV === "production";
   const secureFlag = isProduction; 
-
+console.log(secureFlag)
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
-    secure: false,  
+    secure: true,  
     sameSite: "none",
     maxAge: 24 * 60 * 60 * 1000,
   });
@@ -15,7 +15,7 @@ export const setAuthCookies = (res: Response, accessToken: string, refreshToken:
   // Set refreshToken cookie
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: false,  
+    secure: true,  
     sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
