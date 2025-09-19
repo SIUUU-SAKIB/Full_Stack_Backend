@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: "https://stellular-mochi-c941ff.netlify.app",
         credentials: true,
     })
 );
