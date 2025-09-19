@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "https://stellular-mochi-c941ff.netlify.app",
+        origin: "https://ubiquitous-gecko-f5b739.netlify.app",
         credentials: true,
     })
 );
