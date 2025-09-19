@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: "https://ubiquitous-gecko-f5b739.netlify.app",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
