@@ -14,6 +14,7 @@ const userSchema = new Schema<IUser>(
             enum: Object.values(Role),
             default: Role.public
         },
+        refreshToken:{type:String},
         blocked: { type: Boolean, default:false },
         phone: { type: Number, trim: true },
 

@@ -12,10 +12,10 @@ parcelRouter.post('/create-parcel', vaildateZodSchema(ParcelZodSchema), authMidd
 parcelRouter.get('/all-parcel', authMiddleware('admin', 'super_admin'), parcelController.getAllParcels)
 
 // *update parcel
-parcelRouter.patch('/approve-parcel', authMiddleware('admin', 'super_admin'), vaildateZodSchema(updateParcelZodSchema), parcelController.approveParcel)
+parcelRouter.patch('/change-status', authMiddleware('admin', 'super_admin', "receiver", "sender"), vaildateZodSchema(updateParcelZodSchema), parcelController.approveParcel)
 
 // *delete parcel
-parcelRouter.delete('/delete-parcel', authMiddleware('admin', 'super_admin'), parcelController.deleteParcel)
+parcelRouter.delete('/delete-parcel', authMiddleware('admin', 'super_admin',"receiver", "sender"), parcelController.deleteParcel)
 
 // *user delete parcel 
 parcelRouter.delete('/delete-parcel/:id', authMiddleware('sender', "receiver"), parcelController.deleteParcel)
@@ -27,4 +27,5 @@ parcelRouter.get('/current-status', authMiddleware('sender', 'receiver'), parcel
 parcelRouter.delete('/cancel-parcel', authMiddleware("sender", "receiver"), parcelController.cancelParcel)
 
 parcelRouter.get('/getParcelByUser/:id', authMiddleware('sender', 'receiver'), parcelController.getParcelByUser)
+parcelRouter.get('/getParcelById/:id', authMiddleware("sender", "receiver"), parcelController.getParcelById)
 parcelRouter.get(`/get-receiver-parcel/:email`, authMiddleware('receiver'), parcelController.getReceiverParcel)

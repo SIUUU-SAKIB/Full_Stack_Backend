@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from "express"
 import { authService } from "./auth.service";
 import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from 'http-status-codes'
+import httpStatus, { StatusCodes } from 'http-status-codes'
 import { setAuthCookies } from "../../utils/storeCookie";
 import { jwtTokens } from "../../utils/jwtTokens";
 import { UserModel } from "../user/userModel";
 import { AdminModel } from "../user/admin_model";
+import createAppError from "../../Error/createAppError";
+import { envVariable } from "../../config/env.config";
 
 
 
@@ -24,27 +26,39 @@ const credentialsLogin = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
-const refreshToken = (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const token = req.cookies.refreshToken;
-        if (!token) {
-            return res.status(401).json({ message: "No refresh token provided" });
-        }
-        const decoded = jwtTokens.verifyToken(token) as any;
-        const newAccess = jwtTokens.generateToken({ id: decoded.id, role: decoded.role });
-        const newRefresh = jwtTokens.generateRefreshToken({ id: decoded.id });
+const getNewAccessToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
 
-        setAuthCookies(res, newAccess, newRefresh);
-
-        res.json({
-            success: true,
-            accessToken: newAccess,
-            refreshToken: newRefresh,
-        });
-    } catch (error) {
-        return res.status(403).json({ message: "Invalid refresh token" });
+    if (!refreshToken) {
+      throw new createAppError(
+        StatusCodes.UNAUTHORIZED,
+        "No refresh token received"
+      );
     }
+
+    const tokenInfo = await authService.getNewAccessToken(refreshToken);
+
+    // 🔑 SET COOKIES FIRST
+    setAuthCookies(res, tokenInfo.accessToken, tokenInfo.refreshToken);
+
+    // 🔑 THEN send response
+    sendResponse(res, {
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "Access token refreshed successfully",
+      data: null, // no need to expose tokens
+    });
+
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 
 const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
@@ -67,32 +81,26 @@ const resetPassword = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 
-const logout = (req: Request, res: Response, next: NextFunction) => {
-    const isProduction = process.env.NODE_ENV === "production";
+const logout = (req: Request, res: Response) => {
+  const isProduction = envVariable.NODE_ENV === "production";
 
-    // Clear the refreshToken cookie
-    res.clearCookie("refreshToken", {
-        httpOnly: true,  // Ensures the cookie is not accessible via JavaScript
-        secure: isProduction,  // Set to true in production for HTTPS
-        sameSite: "none",  // Allow cross-origin requests
-        expires: new Date(0),  // Expire the cookie immediately
-    });
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" as const : "lax" as const,
+    path: "/", 
+  };
 
-    // Clear the accessToken cookie
-    res.clearCookie("accessToken", {
-        httpOnly: true,  // Ensures the cookie is not accessible via JavaScript
-        secure: isProduction,  // Set to true in production for HTTPS
-        sameSite: "none",  // Allow cross-origin requests
-        expires: new Date(0),  // Expire the cookie immediately
-    });
+  res.clearCookie("refreshToken", cookieOptions);
+  res.clearCookie("accessToken", cookieOptions);
 
-    // Send a response indicating successful logout
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.ACCEPTED,
-        message: "Logout successful"
-    });
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Logout successful",
+  });
 };
+
 
 
 // controllers/auth.controller.ts
@@ -108,5 +116,5 @@ const getMe = async (req: Request, res: Response) => {
 };
 
 export const AuthController = {
-    credentialsLogin, resetPassword, logout, refreshToken, getMe
+    credentialsLogin, resetPassword, logout, getNewAccessToken, getMe
 }

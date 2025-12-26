@@ -16,7 +16,6 @@ const createParcel = async (payload: Partial<IParcel>, email: string) => {
     const { receiver, trackingNumber, ...rest } = payload;
     const recEmail = receiver?.email
     const findReceiver = await UserModel.findOne({ email: recEmail })
-    console.log(recEmail)
     if (!findReceiver) {
         throw new createAppError(httpStatus.NOT_FOUND, 'Receiver does not exist on our database')
     }
@@ -58,6 +57,7 @@ const createParcel = async (payload: Partial<IParcel>, email: string) => {
 
 const approveParcel = async (payload: Partial<IParcel>) => {
     const { parcelId } = payload
+    console.log(parcelId, payload)
     const parcel = await ParcelModel.findByIdAndUpdate(parcelId, payload)
     await parcel?.save()
     return parcel
@@ -96,7 +96,8 @@ const verifyUser = async (id: string) => {
 }
 // *DELETE PARCEL : ONLY ADMIN 
 const deleteParcel = async (id: string) => {
-    await ParcelModel.findByIdAndDelete(id)
+    const res = await ParcelModel.findByIdAndDelete(id)
+    return res
 }
 
 // *PARCEL STATUS
@@ -161,7 +162,10 @@ const getParcelByUser = async (id: string) => {
 };
 
 
-
+const getParcelById = async(id:string) => {
+    const parcel = await ParcelModel.findById(id)
+    return parcel
+}
 
 const getReceiverParcel = async (email: string) => {
 
@@ -169,5 +173,5 @@ const getReceiverParcel = async (email: string) => {
     return parcels
 }
 export const parcelService = {
-    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, verifyUser, getReceiverParcel
+    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, verifyUser, getReceiverParcel, getParcelById
 }

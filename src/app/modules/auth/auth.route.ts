@@ -13,5 +13,5 @@ authRoutes.patch('/reset-password',authMiddleware(...Object.values(Role)), AuthC
 
 // *LOGOUT
 authRoutes.post('/logout', authMiddleware(...Object.values(Role)), AuthController.logout)
-authRoutes.post('/refreshToken', AuthController.refreshToken)
+authRoutes.post('/refresh', AuthController.getNewAccessToken)
 authRoutes.get('/me',authMiddleware(...Object.values(Role)), AuthController.getMe)

@@ -11,7 +11,8 @@ export const ParcelStatusEnum = z.enum([
   "delivered",
   "returned",
   "cancelled",
-  "rejected"
+  "rejected",
+  "accepted"
 ]);
 
 export const PaymentStatusEnum = z.enum(["unpaid", "paid", "refunded"]);

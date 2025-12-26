@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node ./dist/server.js",
     "dev": "ts-node-dev src/server.ts",
-    "server": "npx nodemon ./dist/server.js",
+    "server": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -31,6 +31,9 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.10"
-  }
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.2"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

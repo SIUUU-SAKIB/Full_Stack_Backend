@@ -22,9 +22,6 @@ startMongoose()
 
 
 
-
-
-
 const racefullyShutown = async () => {
     console.log('Gracefully shutting down the server ...')
 

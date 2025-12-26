@@ -6,15 +6,17 @@ import serverless from 'serverless-http';
 import { mainRouter } from './app/router/mainRouter';
 import { globalErrorHandler } from './app/middlewares/globalErrorHandler';
 import { notFoundHandler } from './app/middlewares/notFound';
+import { envVariable } from './app/config/env.config';
 
 const app = express();
 
 app.use(
     cors({
-        origin: "https://fascinating-otter-9896e1.netlify.app",
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
+app.use(express.urlencoded({extended:true}))
 app.use(express.json());
 app.use(cookieParser());
 
@@ -23,7 +25,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
     try {
         res.status(httpStatus.OK).json({
             success: true,
-            message: 'ASSIGNMENT-5 SERVER WORKING',
+            message: 'ASSIGNMENT-6 SERVER WORKING',
         });
     } catch (error) {
         next(error);

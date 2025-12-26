@@ -1,23 +1,26 @@
 import { Response } from "express";
-import { envVariable } from "../config/env.config";
 
-export const setAuthCookies = (res: Response, accessToken: string, refreshToken: string) => {
+export const setAuthCookies = (
+  res: Response,
+  accessToken: string,
+  refreshToken: string
+) => {
   const isProduction = process.env.NODE_ENV === "production";
-  const secureFlag = isProduction; 
-console.log(secureFlag)
-  res.cookie("accessToken", accessToken, {
+
+  const cookieOptions = {
     httpOnly: true,
-    secure: true,  
-    sameSite: "none",
-    maxAge: 24 * 60 * 60 * 1000,
+    secure: isProduction, 
+    sameSite: isProduction ? "none" as const : "lax" as const,
+    path: "/",          
+  };
+
+  res.cookie("accessToken", accessToken, {
+    ...cookieOptions,
+    maxAge: 15 * 60 * 1000,
   });
 
-  // Set refreshToken cookie
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,  
-    sameSite: "none",
+    ...cookieOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 };
-

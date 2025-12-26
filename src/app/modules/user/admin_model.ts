@@ -14,15 +14,10 @@ const adminSchema = new Schema<IUser>(
             enum: Object.values(Role),
             default: Role.public,
             required: true,
-            
+   
         },
-
         phone: { type: Number, trim: true },
-
         profileImage: { type: String },
-
-        isVerified: { type: Boolean, default: false },
-
         address: {
             street: { type: String },
             city: { type: String },

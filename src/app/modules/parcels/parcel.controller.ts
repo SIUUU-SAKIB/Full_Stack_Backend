@@ -47,6 +47,7 @@ const approveParcel = async (
     req: Request,
     res: Response,
     next: NextFunction) => {
+        
     try {
         const result = await parcelService.approveParcel(req.body)
         sendResponse(res, {
@@ -66,6 +67,7 @@ const deleteParcel = async (
     req: Request,
     res: Response,
     next: NextFunction) => {
+        console.log(req.body.id)
     try {
         await parcelService.deleteParcel(req.body.id)
         sendResponse(res, {
@@ -118,7 +120,6 @@ const cancelParcel = async (req: Request, res: Response, next: NextFunction) => 
 
 }
 const getParcelByUser = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params.id)
     const parcels = await parcelService.getParcelByUser(req.params.id);
     sendResponse(res, {
         success: true,
@@ -142,6 +143,17 @@ const getReceiverParcel = async (req: Request, res: Response, next: NextFunction
     })
 
 }
+
+const getParcelById = async(req: Request, res: Response, next: NextFunction) => {
+      const parcel = await parcelService.getParcelById(req.params.id);
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.ACCEPTED,
+        message: `Successfully fetched Data`,
+        data: parcel
+
+    })
+}
 export const parcelController = {
-    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, getReceiverParcel
+    createParcel, getAllParcels, approveParcel, deleteParcel, parcelStatus, cancelParcel, getParcelByUser, getReceiverParcel, getParcelById
 }

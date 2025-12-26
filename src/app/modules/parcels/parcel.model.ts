@@ -26,6 +26,7 @@ const ParcelSchema = new Schema<IParcel>({
       approvalDate:{type:Date},
       deliveredDate:{type:Date},
       transitDate:{type:Date},
+      acceptDate:{type:Date},
     receiverEmail:{type:String},
     sender: { type: AddressSchema, required: true },
     receiver: { type: AddressSchema, required: true },

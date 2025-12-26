@@ -4,7 +4,8 @@ export enum ParcelStatus {
     DELIVERED = "delivered",
     CANCELLED = "cancelled",
     APPROVED = "approved",
-    REJECTED = "rejected"
+    REJECTED = "rejected",
+    ACCEPTED = "accepted"
 }
 
 export type PaymentStatus = "unpaid" | "paid" | "refunded";
@@ -18,9 +19,9 @@ export interface IAddress {
 }
 
 export interface IParcel {
-    parcelId:string,
-    userId:string,
-    receiverEmail:string,
+    parcelId: string,
+    userId: string,
+    receiverEmail: string,
     sender: IAddress,
     receiver: IAddress,
     accessToken?: string,
@@ -31,10 +32,11 @@ export interface IParcel {
     trackingNumber?: string,
     currentStatus: ParcelStatus,
     pickupDate?: Date,
-    rejectedDate?:Date,
-    approvalDate?:Date,
-    transitDate?:Date,
-    deliveredDate?:Date,
+    rejectedDate?: Date,
+    approvalDate?: Date,
+    acceptDate?: Date,
+    transitDate?: Date,
+    deliveredDate?: Date,
     expectedDeliveryDate?: Date;
     actualDeliveryDate?: Date;
     deliveryAttempts?: number;
